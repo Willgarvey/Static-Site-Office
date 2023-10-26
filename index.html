@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>The Office Script Search</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="scripts.js" defer ></script>
+  <script src="data/processedLines.js" defer ></script>
+  <script src="data/scriptLines.js" defer ></script>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html"><h2>The Office Script Search</h2></a>
+    <div class="search-bar" id="searchForm">
+      <input type="text" id="searchInput" name="Text" class="search-input" value="That's what she said!" >
+      <select id="dropdown" name="SelectedOption" class="search-dropdown"value="Michael" >
+          <option value="All Speakers">All Speakers</option>
+          <option value="More Options...">More Options...</option>
+        </select>
+      <button class="search-button" id="searchButton">Search</button>
+    </div>
+    <div class="inner-container">
+    <div class="sidebar">
+        <h2 id="selected-title">Episode Info</h2>
+        <div id="selected-details">
+            <p>Season: <span id="selected-season"></span></p>
+            <p>Episode: <span id="selected-episode"></span></p>
+            <p>Scene: <span id="selected-scene"></span></p>
+            <p>Character: <span id="selected-character"></span></p>
+            <p>Disk Number: <span id="selected-disk-number"></span></p>
+            <p>Deleted Scene: <span id="selected-deleted"></span></p>
+        </div>
+    </div> 
+    <div class="result-list-container">
+        <div class="result-list-wrapper">
+            <ul class="result-list">
+            </ul>
+        </div>
+    </div>
+  </div>
+  <div class="lower-container">
+    <h2>Script in Context</h2>
+    <div class="lower-container-wrapper">
+      <div class="lower-container-buttons">
+        <button id="lower-button-up">&#9650;</button>
+        <button id="lower-button-down">&#9660;</button>
+      </div>
+    <div class="lower-container-script">
+        <div id="current-id" class="hidden"></div>
+      <table>
+        <tr>
+          <td id="previous-speaker"></td>
+          <td id="previous-line"></td>
+        </tr>
+        <tr>
+          <td id="current-speaker"></td>
+          <td id="current-line"></td>
+        </tr>
+        <tr>
+          <td id="next-speaker"></td>
+          <td id="next-line"></td>
+        </tr>
+      </table>
+    </div>  
+  </div>
+  </div>
+  </div>
+  <div class="bottom-container"></div>
+  <footer>
+    <p> &copy; Will Garvey 2023</p>
+  </footer>
+</body> 
+</html> 
