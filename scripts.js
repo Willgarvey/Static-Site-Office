@@ -1,8 +1,8 @@
 "use strict";
 
 document.addEventListener('DOMContentLoaded', function () {
-    let lines = null; // The final results of the search
-    let contextLines = null; // The context lines for the search
+    let lines = null;
+    let contextLines = null;
 
     // Selectors
     let searchInput = document.getElementById('searchInput');
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let sidebarDiskNumber = document.getElementById('selected-disk-number');
     let sidebarDeleted = document.getElementById('selected-deleted');
 
-    let previousSpeakerElement = document.getElementById('previous-speaker'); // Context lines area
+    let previousSpeakerElement = document.getElementById('previous-speaker'); // Context area
     let previousLineElement = document.getElementById('previous-line');
     let currentLineIDElement = document.getElementById('current-id');
     let currentSpeakerElement = document.getElementById('current-speaker');
@@ -27,10 +27,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let lowerButtonUp = document.getElementById('lower-button-up');
     let lowerButtonDown = document.getElementById('lower-button-down');
-
-    // Retreive values from the page
-    let initialText = searchInput.value;
-    let initialOption = dropdown.selectedOption;
 
     //Enable the Search Button
     searchButton.disabled = false;
@@ -45,10 +41,9 @@ document.addEventListener('DOMContentLoaded', function () {
         resultList.appendChild(paragraph);
     }
 
-    else { // Do someting with results
-        // Track list count to not exceed a specified length    
-        let listCount = 0; 
-        // Generate list items from lines JSON Object
+    else { // Do someting with results           
+        let listCount = 0; // Track list count to not exceed a specified length 
+        // Generate list items from JSON Object
         for (let i = 0; i < lines.length; i++) {
             let line = lines[i];
             let className = i === 0 ? "result-item selected" : "result-item";
@@ -69,15 +64,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.classList.add('selected');
                 let dataIndex = parseInt(this.getAttribute('data-index'));
                 let selectedItem = lines[dataIndex];
-                let selectedIndex = selectedItem.LineID; // LineID of selectedItem
-                // Populate the sidebar with ddata related to selected list item
-                sidebarTitle.textContent = selectedItem.Title;
+                let selectedIndex = selectedItem.LineID;
+                
+                sidebarTitle.textContent = selectedItem.Title; // Populate the sidebar with data of selected list item
                 sidebarSeason.textContent = selectedItem.Season;
                 sidebarEpisode.textContent = selectedItem.Episode;
                 sidebarScene.textContent = selectedItem.Scene;
                 sidebarCharacter.textContent = selectedItem.Speaker;
                 sidebarDiskNumber.textContent = selectedItem.Dvd;
                 sidebarDeleted.textContent = selectedItem.IsDeleted;
+
                 // Find the matching line in the context lines JSON
                 for (let i = 0; i < contextLines.length; i++) {
                     if (contextLines[i].LineID === selectedIndex) {
@@ -85,16 +81,15 @@ document.addEventListener('DOMContentLoaded', function () {
                         break;
                     }
                 }
-                // Check if a matching line was found
-                if (selectedIndex !== -1) {
+                
+                if (selectedIndex !== -1) {  // Check if a matching line was found
                     let selectedLine = contextLines[selectedIndex];
                     let previousLine = contextLines[selectedIndex - 1];
                     let nextLine = contextLines[selectedIndex + 1];
 
-                    // Retrieve the Speaker and LineText properties for the selected line
-                    let selectedSpeaker = selectedLine.Speaker;
-                    let selectedLineText = selectedLine.LineText;
-                    let selectedLineID = selectedLine.LineID;
+                    let selectedSpeaker = selectedLine.Speaker; // Select the speaker
+                    let selectedLineText = selectedLine.LineText; // Select the line
+                    let selectedLineID = selectedLine.LineID; // Select the ID
 
                     // Retrieve the Speaker and LineText properties for the previous line
                     let previousSpeaker = previousLine ? previousLine.Speaker : "";
@@ -129,17 +124,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Update the variable that holds the dropdown value when changed
-    // let dropdown = document.getElementById('dropdown'); most likely delete this
     let moreOptions = "More Options...";
     let charactersLoaded = 50; // Number of characters initially loaded
-    let characterNames = dropdown.options;
 
     // Function to populate the dropdown with character options
     function populateCharacterOptions() {
         dropdown.innerHTML = ''; // Clear existing options
 
         // Add the initial characters to the dropdown
-        for (let i = 0; i < charactersLoaded && i < characterNames.length; i++) {
+        for (let i = 0; i < charactersLoaded && i < characterNames.length; i++) { //characterNames is in characterNames.js
             let character = characterNames[i];
             let option = document.createElement('option');
             option.value = character;
@@ -154,16 +147,17 @@ document.addEventListener('DOMContentLoaded', function () {
     dropdown.addEventListener('change', function () {
         let selectedOption = dropdown.value;
         if (selectedOption === moreOptions) {
-            // Load all remaining characters
-            charactersLoaded = characterList.length;
+            charactersLoaded = characterList.length;    // Load all remaining characters
             populateCharacterOptions();
         } else {
             // Handle selection of other character options
             // ...existing code...
         }
     });
+
     // Up and Down arrows for the script context scrolling
     let storedResults = null;
+
     lowerButtonUp.addEventListener('click', function () {
         let currentLineID = document.getElementById('current-id').innerHTML;
         if (currentLineID != "") {
@@ -179,6 +173,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return results;
         }
     });
+
     lowerButtonDown.addEventListener('click', function () {      
         let currentLineID = document.getElementById('current-id').innerHTML;
         // console.log("Current Line ID" + currentLineID);
@@ -220,8 +215,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (matchingIndex >= 1) {
                 if (button === "up")
                 {
-                    // console.log("UP shift the lines")
-
                     currentSpeakerElement.innerHTML = results[matchingIndex - 1].speaker;
                     currentLineElement.innerHTML = results[matchingIndex - 1].lineText;
 
@@ -244,7 +237,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 else if (button === "down")
                 {
-                    // console.log("DOWN shift the lines")
                     currentSpeakerElement.innerHTML = results[matchingIndex + 1].speaker;
                     currentLineElement.innerHTML = results[matchingIndex + 1].lineText;
 
@@ -337,45 +329,43 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Event listener function for the search button
+    // Search
     document.getElementById('searchButton').addEventListener('click', function () {
-    // Retrieve the search text and selected character from the form
-    let searchText = document.getElementById('searchInput').value;
-    let selectedCharacter = document.getElementById('searchOption').value;
+        // Retrieve the search text and selected character from the form
+        let searchText = searchInput.value;
+        let selectedCharacter = dropdown.selectedOption;
 
-    // Create an instance of the Search class
-    let search = new Search();
+        // Create an instance of the Search class
+        let search = new Search();
 
-    // return the results of the search as an ordered list of indexes
-    let result = search.searchScript(searchText, processedLines, selectedCharacter);
-
-    // Handle if the result is "Invalid" (not using unique words)
-    if (result === 'Invalid') {
-        // Perform the necessary actions to display the result on the page (e.g., show a message)
-        showInvalidResult(); // TODO: Impliment this function
-        return;
-    }
-
-    // If there is a valid result
-    if (result !== '' && selectedCharacter !== null) {
-        const lines = new ScriptCollection();
-
-        // TODO: Look in HomeController.cs and Search.js / Search.cs for references
-        let unsortedFinalResults = search.getMatchingLines(result, scriptLines); // TODO: create method
-        let sortedFinalResults = SortByRelevance(result, unsortedFinalResults); //TODO: create method
-        // Post the final results to the main list
-        console.log(sortedFinalResults);
-        // Start to retreive the context lines as another variable
-        let resultWithContextLines = search.AddContextLines(lines); // Create result with all context indexes
-        let contextLines = new ScriptCollection();
-        contextLines = search.getMatingLines(resultWithContextLines, lines);
-
-    } else {
-        console.log("Bad results was not handled correctly.");
-        return
+        // return the results of the search as an ordered list of indexes
+        let result = search.searchScript(searchText, processedLines, selectedCharacter);
+        // Handle if the result is "Invalid" (not using unique words)
+        if (result === 'Invalid') {
+            // Perform the necessary actions to display the result on the page (e.g., show a message)
+            showInvalidResult(); // TODO: Impliment this function
+            return;
         }
-    });
-    
+
+        // If there is a valid result
+        if (result !== '' && selectedCharacter !== null) {
+            //const lines = new ScriptCollection();
+
+            //TODO: result is valid here as of 10/27/2023. Need to create SortByRelevance method
+            let unsortedFinalResults = search.getMatchingLines(result, scriptLines); // TODO: create method
+            let sortedFinalResults = SortByRelevance(result, unsortedFinalResults); //TODO: create method
+            // Post the final results to the main list
+            //console.log(sortedFinalResults);
+            // Start to retreive the context lines as another variable
+            let resultWithContextLines = search.AddContextLines(lines); // Create result with all context indexes
+            let contextLines = new ScriptCollection();
+            contextLines = search.getMatchingLines(resultWithContextLines, lines);
+
+        } else {
+            console.log("Bad results was not handled correctly.");
+            return
+            }
+    });   
 });
 
 

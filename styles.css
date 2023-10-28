@@ -119,19 +119,19 @@ footer {
 }
 
 .result-list-container {
-    flex: 1; /* Allow the container to grow and fill available space */
-    min-height: 9em; /* Set a fixed height of 20% of the viewport height */
-    max-width: 65vw; /* Set the maximum width to 40% of the viewport width */
+    flex: 1; 
+    min-height: 9em; 
+    max-width: 65vw; 
     overflow-y: scroll; /* Always show vertical scrollbar */
-    scrollbar-width: thin; /* Adjust the width of the scrollbar */
-    scrollbar-color: rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0.1); /* Set the colors of the scrollbar (track color and thumb color) */
-    padding-right: 10px; /* Add some padding to accommodate scrollbar width */
+    scrollbar-width: thin; 
+    scrollbar-color: rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0.1); 
+    padding-right: 10px; 
     box-shadow: 2px 4px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .result-list-wrapper {
-    display: flex; /* Use flexbox layout for the wrapper */
-    flex-direction: column; /* Stack list items vertically */
+    display: flex; 
+    flex-direction: column; 
 }
 
 .result-item.selected {
@@ -185,7 +185,7 @@ footer {
 }
 
     .result-zero p {
-        margin: 0; /* Remove default margin */
+        margin: 0; 
     }
 
     .result-zero:before {
