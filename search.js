@@ -73,7 +73,8 @@ class Search {
       return s.output;
     }
   
-    addContextLines(lines) {
+    addContextLines(sortedFinalResults) {
+      let lines = sortedFinalResults;
       let numbers = lines.map(line => line.id);
       let copy = numbers.slice();
   
@@ -95,11 +96,12 @@ class Search {
     }
 
     getMatchingLines(result, scriptLines){
-
+      let sortedFinalResults = [];
       let indices = result.split(",").map(index => parseInt(index, 10));
-      let unsortedFinalResults = scriptLines.filter(obj => indices.includes(parseInt(obj.id, 10)));
-      return unsortedFinalResults;
-
+      for(let i=0; i<indices.length; i++){
+        sortedFinalResults[i] = scriptLines[indices[i]];
+      }
+      return sortedFinalResults;
     }
   }
   

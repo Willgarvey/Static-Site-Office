@@ -1,8 +1,8 @@
 "use strict";
 
 document.addEventListener('DOMContentLoaded', function () {
-    let lines = null;
-    let contextLines = null;
+    let lines = [];
+    let contextLines = [];
 
     // Selectors
     let searchInput = document.getElementById('searchInput');
@@ -350,17 +350,13 @@ document.addEventListener('DOMContentLoaded', function () {
         // If there is a valid result
         if (result !== '' && selectedCharacter !== null) {
             //const lines = new ScriptCollection();
-
             //TODO: result is valid here as of 10/27/2023. Need to create SortByRelevance method
-            let unsortedFinalResults = search.getMatchingLines(result, scriptLines); // TODO: create method
-            let sortedFinalResults = SortByRelevance(result, unsortedFinalResults); //TODO: create method
-            // Post the final results to the main list
-            //console.log(sortedFinalResults);
+            let lines = search.getMatchingLines(result, scriptLines); // TODO: create method
             // Start to retreive the context lines as another variable
-            let resultWithContextLines = search.AddContextLines(lines); // Create result with all context indexes
-            let contextLines = new ScriptCollection();
-            contextLines = search.getMatchingLines(resultWithContextLines, lines);
-
+            //let resultsWithContextLines = search.AddContextLines(lines); // Create result with all context indexes
+            //contextLines = search.getMatchingLines(resultsWithContextLines, lines);
+            console.log(lines);
+            return
         } else {
             console.log("Bad results was not handled correctly.");
             return
