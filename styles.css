@@ -111,6 +111,9 @@ footer {
     display: flex;
     flex-direction: row;
 }
+.lower-container-script {
+    min-height: 40vh;
+}
 
 .result-list {
     list-style: none;
@@ -218,7 +221,7 @@ footer {
 }
 
 .search-button {
-    min-width: 8vw;
+    min-width: 14em;
     padding: 10px;
     background-color: #4285F4;
     color: #fff;

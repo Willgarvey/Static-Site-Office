@@ -2,8 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    // --- Selectors
-    let searchInput = document.getElementById('searchInput');
+    let searchInput = document.getElementById('searchInput'); // User input
     let dropdown = document.getElementById('dropdown');
 
     let resultList = document.querySelector('.result-list'); // List of results
@@ -24,22 +23,19 @@ document.addEventListener('DOMContentLoaded', function () {
     let nextSpeakerElement = document.getElementById('next-speaker');
     let nextLineElement = document.getElementById('next-line');
 
-    let lowerButtonUp = document.getElementById('lower-button-up');
+    let lowerButtonUp = document.getElementById('lower-button-up'); // Buttons to browse context area
     let lowerButtonDown = document.getElementById('lower-button-down');
 
     populateCharacterOptions();
 
-
-    // Up arrow button for script linesin context
-    lowerButtonUp.addEventListener('click', function () {
+    lowerButtonUp.addEventListener('click', function () { // Press up arrow icon
         assignContextResults("up"); 
     });
-    // Down arrow button for script lines in context
-    lowerButtonDown.addEventListener('click', function () {      
+
+    lowerButtonDown.addEventListener('click', function () { // Press down arrow icon
         assignContextResults("down");    
     });
-    // Search
-    document.getElementById('searchButton').addEventListener('click', function () {
+    document.getElementById('searchButton').addEventListener('click', function () { // Press the Search button
 
         
         // Retrieve the search text and selected character from the form
@@ -157,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     sidebarEpisode.textContent = selectedItem.Episode;
                     sidebarScene.textContent = selectedItem.Scene;
                     sidebarCharacter.textContent = selectedItem.Speaker;
-                    sidebarDiskNumber.textContent = selectedItem.Dvd;
+                    sidebarDiskNumber.textContent = selectedItem.Disk;
                     sidebarDeleted.textContent = selectedItem.IsDeleted;
                     sidebarLineID.textContent = selectedItem.LineID;
 
@@ -203,18 +199,18 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
-        // Function to populate the dropdown with character options
-        function populateCharacterOptions() {
-            dropdown.innerHTML = ''; // Clear existing options
-    
-            // Add the initial characters to the dropdown
-            for (let i = 0; i < characterNames.length; i++) { // characterNames.js
-                let character = characterNames[i];
-                let option = document.createElement('option');
-                option.value = character;
-                option.textContent = character;
-                dropdown.appendChild(option);
-            }
+    // Function to populate the dropdown with character options
+    function populateCharacterOptions() {
+        dropdown.innerHTML = ''; // Clear existing options
+
+        // Add the initial characters to the dropdown
+        for (let i = 0; i < characterNames.length; i++) { // characterNames.js
+            let character = characterNames[i];
+            let option = document.createElement('option');
+            option.value = character;
+            option.textContent = character;
+            dropdown.appendChild(option);
         }
+    }
 });
 
