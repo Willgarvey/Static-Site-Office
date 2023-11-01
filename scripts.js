@@ -137,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 let line = lines[i];
                 let className = i === 0 ? "result-item selected" : "result-item";
                 let dataIndex = i;
+                console.log(i);
                 let lineText = line.LineText;
                 let speaker = line.Speaker;
                 let li = document.createElement('li');
@@ -160,10 +161,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     sidebarDiskNumber.textContent = selectedItem.Dvd;
                     sidebarDeleted.textContent = selectedItem.IsDeleted;
                     sidebarLineID.textContent = selectedItem.LineID;
-                    
-                    let selectedLine = scriptLines[lines[i].LineID - 1];
-                    let previousLine = scriptLines[lines[i].LineID];
-                    let nextLine = scriptLines[lines[i].LineID - -1];
+                    //TODO : Fix
+                    let selectedLine = scriptLines.find(obj => obj.LineID === parseInt(sidebarLineID.textContent));
+                    let previousLine = scriptLines.find(obj => obj.LineID === parseInt(sidebarLineID.textContent) - 1);
+                    let nextLine = scriptLines.find(obj => obj.LineID === parseInt(sidebarLineID.textContent) + 1);
 
                     let selectedSpeaker = selectedLine.Speaker; // Select the speaker
                     let selectedLineText = selectedLine.LineText; // Select the line
@@ -186,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
                 resultList.appendChild(li);
                 listCount++;
-                if(listCount === lines.length || listCount > 100){
+                if(listCount === lines.length){
                     // Simulate a click event on the first list item
                     let firstListItem = resultList.querySelector('.result-item');
                     if (firstListItem) {

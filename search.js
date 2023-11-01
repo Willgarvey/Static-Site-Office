@@ -30,7 +30,7 @@ class Search {
 
       for (let line of processedLines) {
         let matchCount = 0;
-        let matchIndex = line.id-1;
+        let matchIndex = line.id;
         s.matchList = [];
         let lineList = Search.stringToList(line.line_text);
   
@@ -44,10 +44,8 @@ class Search {
             }
           }
         }
-  
-        s.matchPercentage = matchCount / lineList.length;
-  
         if (matchCount > 0) {
+          s.matchPercentage = matchCount / lineList.length;
           dataList.push({ matchIndex, matchCount, matchPercentage: s.matchPercentage });
         }
       }
@@ -84,7 +82,10 @@ class Search {
       let indices = result.split(",").map(index => parseInt(index, 10));
       for(let i=0; i<indices.length; i++){
         if (i<100){
-          sortedFinalResults[i] = lines[indices[i]];
+          // sortedFinalResults[i] = lines[indices[i]];
+          sortedFinalResults[i] = scriptLines.find(obj => obj.LineID === indices[i]);
+
+          
         }
       }
       return sortedFinalResults;
