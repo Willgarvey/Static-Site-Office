@@ -137,7 +137,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 let line = lines[i];
                 let className = i === 0 ? "result-item selected" : "result-item";
                 let dataIndex = i;
-                console.log(i);
                 let lineText = line.LineText;
                 let speaker = line.Speaker;
                 let li = document.createElement('li');
@@ -161,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     sidebarDiskNumber.textContent = selectedItem.Dvd;
                     sidebarDeleted.textContent = selectedItem.IsDeleted;
                     sidebarLineID.textContent = selectedItem.LineID;
-                    //TODO : Fix
+
                     let selectedLine = scriptLines.find(obj => obj.LineID === parseInt(sidebarLineID.textContent));
                     let previousLine = scriptLines.find(obj => obj.LineID === parseInt(sidebarLineID.textContent) - 1);
                     let nextLine = scriptLines.find(obj => obj.LineID === parseInt(sidebarLineID.textContent) + 1);

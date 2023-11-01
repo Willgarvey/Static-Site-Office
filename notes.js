@@ -1,10 +1,16 @@
-let currentLineID = parseInt(sidebarLineID.textContent);
-
-// Use findIndex to find the index of the object with the specified LineId
-let index = scriptLines.findIndex(line => line.LineId === currentLineID);
-
-if (index !== -1) {
-console.log(`Index of object with LineId ${targetLineId} is: ${index}`);
-} else {
-console.log(`Object with LineId ${targetLineId} not found.`);
-}
+addContextLines(sortedFinalResults) {
+    let lineIDs = sortedFinalResults.map(line => line.LineID); 
+    let copy = lineIDs.slice(); 
+    for (let lineID of copy) {
+      if (!lineIDs.includes(lineID + 1)) {
+        lineIDs.push(lineID + 1);
+      } 
+      if (!lineIDs.includes(lineID - 1)) {
+        lineIDs.push(lineID - 1);
+      }
+    } 
+    lineIDs.sort((a, b) => a - b);
+    let result = lineIDs.join(',');
+  
+    return result;
+  }

@@ -1,14 +1,11 @@
 class Search {
     static splitAndCleanWords(textInput) {
-      // Remove special characters except dashes using regex (kept as is)
-      let cleanedText = textInput.replace(/[^a-zA-Z0-9\- ]/g, '');
-      // Split the words into a list of strings
-      let wordsList = cleanedText.split(' ').filter(word => word !== '');
+      let cleanedText = textInput.replace(/[^a-zA-Z0-9\- ]/g, ''); // remove special characters from input     
+      let wordsList = cleanedText.split(' ').filter(word => word !== ''); // Split the words into a list of strings
       return wordsList;
     }
     static stringToList(inputString) {
       let wordList = [];
-      // console.log("Input string: "+ inputString);
       let words = inputString.split(' ');
       for (let word of words) {
         wordList.push(word);
@@ -17,15 +14,12 @@ class Search {
     }
     searchScript(textInput, processedLines, selectedCharacter) {
       let s = new Search();
-      let dataList = [];
-  
+      let dataList = []; 
       s.input = textInput;
       s.wordsList = Search.splitAndCleanWords(s.input);
-  
-      // Return is there are no words in the list
+        
       if (!s.wordsList.length) {
-        s.output = 'Invalid';
-        return s.output;
+        return s.output = 'Invalid'; // Return if there are no words in cleaned input
       }
 
       for (let line of processedLines) {
@@ -49,43 +43,17 @@ class Search {
           dataList.push({ matchIndex, matchCount, matchPercentage: s.matchPercentage });
         }
       }
-  
-      let sortedList = dataList
-        .sort((a, b) => b.matchCount - a.matchCount || b.matchPercentage - a.matchPercentage || a.matchIndex - b.matchIndex);
-  
+      let sortedList = dataList.sort((a, b) => b.matchCount - a.matchCount || b.matchPercentage - a.matchPercentage || a.matchIndex - b.matchIndex);
       s.matchIndexes = sortedList.map(entry => entry.matchIndex);
       s.output = s.matchIndexes.join(',');
       return s.output;
-    }
-    addContextLines(sortedFinalResults) {
-      let lineIDs = sortedFinalResults.map(line => line.LineID);
-    
-      let copy = lineIDs.slice();
-    
-      for (let lineID of copy) {
-        if (!lineIDs.includes(lineID + 1)) {
-          lineIDs.push(lineID + 1);
-        }
-    
-        if (!lineIDs.includes(lineID - 1)) {
-          lineIDs.push(lineID - 1);
-        }
-      }
-    
-      lineIDs.sort((a, b) => a - b);
-      let result = lineIDs.join(',');
-    
-      return result;
-    }
-    getMatchingLines(result, lines){
+    }  
+    getMatchingLines(result, scriptLines){
       let sortedFinalResults = [];
       let indices = result.split(",").map(index => parseInt(index, 10));
       for(let i=0; i<indices.length; i++){
         if (i<100){
-          // sortedFinalResults[i] = lines[indices[i]];
           sortedFinalResults[i] = scriptLines.find(obj => obj.LineID === indices[i]);
-
-          
         }
       }
       return sortedFinalResults;
