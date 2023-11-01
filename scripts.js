@@ -48,16 +48,11 @@ document.addEventListener('DOMContentLoaded', function () {
         // return the results of the search as an ordered list of indexes
         let result = search.searchScript(searchText, processedLines, selectedCharacter);
 
-        // Handle if the result is "Invalid" (not using unique words)
-        if (result === 'Invalid') {
-            showInvalidResult();
-            return;
-        }
-
-        // If there is a valid result
-        if (result !== '' && selectedCharacter !== null) {
+        if (result !== '' && selectedCharacter !== null) { // If there is a valid result
             let lines = search.getMatchingLines(result, scriptLines); // return the matching lines
-            console.log(selectedCharacter);     
+            if (selectedCharacter != 'All Speakers'){
+                lines = lines.filter(obj => obj.Speaker === selectedCharacter);
+            }     
             assignSearchResults(lines);
             return lines;
         } else {
@@ -117,13 +112,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     // function to assign script lines the to results list
     function assignSearchResults(lines){       
-        if (lines === null) { // Do something with no results
+        if (lines === null || lines === 'Invalid' || lines.length === 0 ) { //No results
+            resultList.innerHTML = '';
             let paragraph = document.createElement('p');
             let bold = document.createElement('b');
             bold.textContent = 'No results,  Please try again.';
             paragraph.className = "result-zero";
             paragraph.appendChild(bold);
             resultList.appendChild(paragraph);
+            
+            // Clear out context menu
+            previousLineElement.textContent = '';
+            previousSpeakerElement.textContent = '';
+            currentLineElement.textContent = '';
+            currentSpeakerElement.textContent = '';
+            nextLineElement.textContent = '';
+            nextSpeakerElement.textContent = '';
         }
 
         else { // write script lines to the list           
