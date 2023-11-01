@@ -1,5 +1,4 @@
 class Search {
-
     static splitAndCleanWords(textInput) {
       // Remove special characters except dashes using regex (kept as is)
       let cleanedText = textInput.replace(/[^a-zA-Z0-9\- ]/g, '');
@@ -7,7 +6,6 @@ class Search {
       let wordsList = cleanedText.split(' ').filter(word => word !== '');
       return wordsList;
     }
-  
     static stringToList(inputString) {
       let wordList = [];
       // console.log("Input string: "+ inputString);
@@ -17,7 +15,6 @@ class Search {
       }
       return wordList;
     }
-  
     searchScript(textInput, processedLines, selectedCharacter) {
       let s = new Search();
       let dataList = [];
@@ -63,7 +60,6 @@ class Search {
       s.output = s.matchIndexes.join(',');
       return s.output;
     }
-  
     addContextLines(sortedFinalResults) {
       let lineIDs = sortedFinalResults.map(line => line.LineID);
     
@@ -82,12 +78,8 @@ class Search {
       lineIDs.sort((a, b) => a - b);
       let result = lineIDs.join(',');
     
-      // return an ordered list of LineIDs
       return result;
     }
-    
-    
-
     getMatchingLines(result, lines){
       let sortedFinalResults = [];
       let indices = result.split(",").map(index => parseInt(index, 10));
@@ -95,10 +87,8 @@ class Search {
         if (i<100){
           sortedFinalResults[i] = lines[indices[i]];
         }
-        else {
-          return sortedFinalResults;
-        }
       }
+      return sortedFinalResults;
     }
   }
   

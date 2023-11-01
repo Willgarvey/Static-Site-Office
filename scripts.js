@@ -120,9 +120,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
     }
 
-    function assignSearchResults(lines){
-        // Do something with no results
-        if (lines === null) {
+    function assignSearchResults(lines){       
+        if (lines === null) { // Do something with no results
             let paragraph = document.createElement('p');
             let bold = document.createElement('b');
             bold.textContent = 'No results,  Please try again.';
@@ -131,9 +130,9 @@ document.addEventListener('DOMContentLoaded', function () {
             resultList.appendChild(paragraph);
         }
 
-        else { // Do someting with results           
-            let listCount = 0; // Track list count to not exceed a specified length 
-            // Generate list items from JSON Object
+        else { // write script lines to the list           
+            let listCount = 0;
+            resultList.innerHTML = '';
             for (let i = 0; i < lines.length; i++) {
                 let line = lines[i];
                 let className = i === 0 ? "result-item selected" : "result-item";
@@ -144,17 +143,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 li.className = className;
                 li.setAttribute('data-index', dataIndex);
                 li.innerHTML = '<p class="description"><b>' + speaker + "</b>: " + lineText + '</p>';
-                // Start Event listener for clickable list items
-                li.addEventListener('click', function () {
-                    // console.log('Clicked on li item:', this);
+
+                li.addEventListener('click', function () {  // Start Event listener for clickable list items
                     let selectedLi = resultList.querySelector('.result-item.selected');
                     if (selectedLi) {
                         selectedLi.classList.remove('selected');
                     }
                     this.classList.add('selected');
                     let selectedItem = lines[i];
-
-                    
+          
                     sidebarTitle.textContent = selectedItem.Title; // Populate the sidebar with data of selected list item
                     sidebarSeason.textContent = selectedItem.Season;
                     sidebarEpisode.textContent = selectedItem.Episode;
@@ -164,9 +161,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     sidebarDeleted.textContent = selectedItem.IsDeleted;
                     sidebarLineID.textContent = selectedItem.LineID;
                     
-                    let selectedLine = scriptLines[lines[0].LineID];
-                    let previousLine = scriptLines[lines[0].LineID - 1];
-                    let nextLine = scriptLines[lines[0].LineID - -2];
+                    let selectedLine = scriptLines[lines[i].LineID - 1];
+                    let previousLine = scriptLines[lines[i].LineID];
+                    let nextLine = scriptLines[lines[i].LineID - -1];
 
                     let selectedSpeaker = selectedLine.Speaker; // Select the speaker
                     let selectedLineText = selectedLine.LineText; // Select the line
@@ -186,7 +183,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     currentLineElement.textContent = selectedLineText;
                     nextSpeakerElement.textContent = nextSpeaker;
                     nextLineElement.textContent = nextLineText;
-                    // currentLineIDElement.textContent = selectedLineID;
                 });
                 resultList.appendChild(li);
                 listCount++;
@@ -234,7 +230,6 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log("Bad result. Something was not handled correctly.");
             return
             }
-    });   
+    });
 });
-
 
