@@ -1,14 +1,5 @@
 class Search {
-    // constructor() {
-    //   this.input = null;
-    //   this.character = null;
-    //   this.output = null;
-    //   this.wordsList = null;
-    //   this.matchList = null;
-    //   this.matchIndexes = null;
-    //   this.matchPercentage = 0;
-    // }
-  
+
     static splitAndCleanWords(textInput) {
       // Remove special characters except dashes using regex (kept as is)
       let cleanedText = textInput.replace(/[^a-zA-Z0-9\- ]/g, '');
@@ -42,7 +33,7 @@ class Search {
 
       for (let line of processedLines) {
         let matchCount = 0;
-        let matchIndex = line.id;
+        let matchIndex = line.id-1;
         s.matchList = [];
         // console.log("line.line_text = " + line.line_text);
         let lineList = Search.stringToList(line.line_text);
@@ -74,32 +65,35 @@ class Search {
     }
   
     addContextLines(sortedFinalResults) {
-      let lines = sortedFinalResults;
-      let numbers = lines.map(line => line.id);
-      let copy = numbers.slice();
-  
-      for (let number of copy) {
-        if (!numbers.includes(number + 1)) {
-          numbers.push(number + 1);
+      let lineIDs = sortedFinalResults.map(line => line.LineID);
+    
+      let copy = lineIDs.slice();
+    
+      for (let lineID of copy) {
+        if (!lineIDs.includes(lineID + 1)) {
+          lineIDs.push(lineID + 1);
         }
-  
-        if (!numbers.includes(number - 1)) {
-          numbers.push(number - 1);
+    
+        if (!lineIDs.includes(lineID - 1)) {
+          lineIDs.push(lineID - 1);
         }
       }
-  
-      numbers.sort((a, b) => a - b);
-      let result = numbers.join(',');
-      
-      // return an ordered list of indexes to retrieve the search results from the raw script list
+    
+      lineIDs.sort((a, b) => a - b);
+      let result = lineIDs.join(',');
+    
+      // return an ordered list of LineIDs
       return result;
     }
+    
+    
 
-    getMatchingLines(result, scriptLines){
+    getMatchingLines(result, lines){
       let sortedFinalResults = [];
       let indices = result.split(",").map(index => parseInt(index, 10));
-      for(let i=0; i<indices.length; i++){
-        sortedFinalResults[i] = scriptLines[indices[i]];
+      let totalLines = 100;
+      for(let i=0; i<totalLines; i++){
+        sortedFinalResults[i] = lines[indices[i]];
       }
       return sortedFinalResults;
     }

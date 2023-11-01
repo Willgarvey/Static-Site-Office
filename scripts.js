@@ -1,8 +1,6 @@
 "use strict";
 
 document.addEventListener('DOMContentLoaded', function () {
-    let lines = [];
-    let contextLines = [];
 
     // Selectors
     let searchInput = document.getElementById('searchInput');
@@ -30,98 +28,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //Enable the Search Button
     searchButton.disabled = false;
-
-    // Do something with no results
-    if (lines === null) {
-        let paragraph = document.createElement('p');
-        let bold = document.createElement('b');
-        bold.textContent = 'No results,  Please try again.';
-        paragraph.className = "result-zero";
-        paragraph.appendChild(bold);
-        resultList.appendChild(paragraph);
-    }
-
-    else { // Do someting with results           
-        let listCount = 0; // Track list count to not exceed a specified length 
-        // Generate list items from JSON Object
-        for (let i = 0; i < lines.length; i++) {
-            let line = lines[i];
-            let className = i === 0 ? "result-item selected" : "result-item";
-            let dataIndex = i;
-            let lineText = line.LineText;
-            let speaker = line.Speaker;
-            let li = document.createElement('li');
-            li.className = className;
-            li.setAttribute('data-index', dataIndex);
-            li.innerHTML = '<p class="description"><b>' + speaker + "</b>: " + lineText + '</p>';
-            // Start Event listener for clickable list items
-            li.addEventListener('click', function () {
-                // console.log('Clicked on li item:', this);
-                let selectedLi = resultList.querySelector('.result-item.selected');
-                if (selectedLi) {
-                    selectedLi.classList.remove('selected');
-                }
-                this.classList.add('selected');
-                let dataIndex = parseInt(this.getAttribute('data-index'));
-                let selectedItem = lines[dataIndex];
-                let selectedIndex = selectedItem.LineID;
-                
-                sidebarTitle.textContent = selectedItem.Title; // Populate the sidebar with data of selected list item
-                sidebarSeason.textContent = selectedItem.Season;
-                sidebarEpisode.textContent = selectedItem.Episode;
-                sidebarScene.textContent = selectedItem.Scene;
-                sidebarCharacter.textContent = selectedItem.Speaker;
-                sidebarDiskNumber.textContent = selectedItem.Dvd;
-                sidebarDeleted.textContent = selectedItem.IsDeleted;
-
-                // Find the matching line in the context lines JSON
-                for (let i = 0; i < contextLines.length; i++) {
-                    if (contextLines[i].LineID === selectedIndex) {
-                        selectedIndex = i;
-                        break;
-                    }
-                }
-                
-                if (selectedIndex !== -1) {  // Check if a matching line was found
-                    let selectedLine = contextLines[selectedIndex];
-                    let previousLine = contextLines[selectedIndex - 1];
-                    let nextLine = contextLines[selectedIndex + 1];
-
-                    let selectedSpeaker = selectedLine.Speaker; // Select the speaker
-                    let selectedLineText = selectedLine.LineText; // Select the line
-                    let selectedLineID = selectedLine.LineID; // Select the ID
-
-                    // Retrieve the Speaker and LineText properties for the previous line
-                    let previousSpeaker = previousLine ? previousLine.Speaker : "";
-                    let previousLineText = previousLine ? previousLine.LineText : "";
-
-                    // Retrieve the Speaker and LineText properties for the next line
-                    let nextSpeaker = nextLine ? nextLine.Speaker : "";
-                    let nextLineText = nextLine ? nextLine.LineText : "";
-
-                    // Assign values to the elements
-                    previousSpeakerElement.textContent = previousSpeaker;
-                    previousLineElement.textContent = previousLineText;
-                    currentSpeakerElement.textContent = selectedSpeaker;
-                    currentLineElement.textContent = selectedLineText;
-                    nextSpeakerElement.textContent = nextSpeaker;
-                    nextLineElement.textContent = nextLineText;
-                    currentLineIDElement.textContent = selectedLineID;
-                } else {
-                    console.log("No line found with the given LineID");
-                }
-            });
-            resultList.appendChild(li);
-            listCount++;
-        }
-        console.log("List length:" + listCount);
-
-        // Simulate a click event on the first list item
-        let firstListItem = resultList.querySelector('.result-item');
-        if (firstListItem) {
-            firstListItem.click();
-        }
-    }
 
     // Update the variable that holds the dropdown value when changed
     let moreOptions = "More Options...";
@@ -158,12 +64,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // Up and Down arrows for the script context scrolling
     let storedResults = null;
 
+    //Up arrow button for context lines
     lowerButtonUp.addEventListener('click', function () {
         let currentLineID = document.getElementById('current-id').innerHTML;
         if (currentLineID != "") {
             // Check if there are stored results and the current line ID exists in the results
             if (storedResults && storedResults.some(line => line.lineID == currentLineID)) {
-                assignResults(storedResults, "up");
+                assignContextResults(storedResults, "up");
                 //console.log("Cached JSON Used")
             } else {
                 results = sendDataToServer(parseInt(sidebarSeason.textContent), +
@@ -174,13 +81,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // Down arrow button for context lines
     lowerButtonDown.addEventListener('click', function () {      
         let currentLineID = document.getElementById('current-id').innerHTML;
         // console.log("Current Line ID" + currentLineID);
         if (currentLineID != "") {
             // Check if there are stored results and the current line ID exists in the results
             if (storedResults && storedResults.some(line => line.lineID == currentLineID)) {
-                assignResults(storedResults, "down");
+                assignContextResults(storedResults, "down");
                 //console.log("Cached JSON Used")
             } else {
                 results = sendDataToServer(parseInt(sidebarSeason.textContent), +
@@ -191,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }      
     });
    
-    function assignResults(results, button) {
+    function assignContextResults(results, button) {
         let previousSpeakerElement = document.getElementById('previous-speaker');
         let previousLineElement = document.getElementById('previous-line');
         let currentSpeakerElement = document.getElementById('current-speaker');
@@ -264,71 +172,97 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         return results;
     }
-    // Keydown event listener for up and down arrow keys
-    document.addEventListener('keydown', function (event) {
-        let selectedLi = resultList.querySelector('.result-item.selected');
-        if (selectedLi) {
-            let currentIndex = parseInt(selectedLi.getAttribute('data-index'));
-            if (event.key === 'ArrowUp' && currentIndex > 0) {
-                currentIndex--;
-            } else if (event.key === 'ArrowDown' && currentIndex < lines.length - 1) {
-                currentIndex++;
-            }
-            let newSelectedLi = resultList.querySelector('[data-index="' + currentIndex + '"]');
-            if (newSelectedLi) {
-                selectedLi.classList.remove('selected');
-                newSelectedLi.classList.add('selected');
-                newSelectedLi.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-                let selectedIndex = parseInt(newSelectedLi.getAttribute('data-index'));
-                let selectedItem = lines[selectedIndex];
-                let selectedLineID = selectedItem.LineID;
+    function assignSearchResults(lines){
+        // Do something with no results
+        if (lines === null) {
+            let paragraph = document.createElement('p');
+            let bold = document.createElement('b');
+            bold.textContent = 'No results,  Please try again.';
+            paragraph.className = "result-zero";
+            paragraph.appendChild(bold);
+            resultList.appendChild(paragraph);
+        }
 
-                sidebarTitle.textContent = selectedItem.Title;
-                sidebarCharacter.textContent = selectedItem.Speaker;
-                sidebarEpisode.textContent = selectedItem.Episode;
-                sidebarSeason.textContent = selectedItem.Season;
-                sidebarDiskNumber.textContent = selectedItem.Dvd;
-                sidebarDeleted.textContent = "";
-
-                for (let i = 0; i < contextLines.length; i++) {
-                    if (contextLines[i].LineID === selectedLineID) {
-                        selectedIndex = i;
-                        break;
+        else { // Do someting with results           
+            let listCount = 0; // Track list count to not exceed a specified length 
+            // Generate list items from JSON Object
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i];
+                let className = i === 0 ? "result-item selected" : "result-item";
+                let dataIndex = i;
+                let lineText = line.LineText;
+                let speaker = line.Speaker;
+                let li = document.createElement('li');
+                li.className = className;
+                li.setAttribute('data-index', dataIndex);
+                li.innerHTML = '<p class="description"><b>' + speaker + "</b>: " + lineText + '</p>';
+                // Start Event listener for clickable list items
+                li.addEventListener('click', function () {
+                    // console.log('Clicked on li item:', this);
+                    let selectedLi = resultList.querySelector('.result-item.selected');
+                    if (selectedLi) {
+                        selectedLi.classList.remove('selected');
                     }
+                    this.classList.add('selected');
+                    let selectedItem = lines[i];
+                    let selectedIndex = i;
+                    
+                    sidebarTitle.textContent = selectedItem.Title; // Populate the sidebar with data of selected list item
+                    sidebarSeason.textContent = selectedItem.Season;
+                    sidebarEpisode.textContent = selectedItem.Episode;
+                    sidebarScene.textContent = selectedItem.Scene;
+                    sidebarCharacter.textContent = selectedItem.Speaker;
+                    sidebarDiskNumber.textContent = selectedItem.Dvd;
+                    sidebarDeleted.textContent = selectedItem.IsDeleted;
+
+                    //selectedItem.LineID
+                    
+                    if (selectedIndex !== -1) {  // Check if a matching line was found
+                        let selectedLine = scriptLines[selectedItem.LineID];
+                        let previousLine = scriptLines[selectedItem.LineID - 1];
+                        let nextLine = scriptLines[selectedItem.LineID + 1];
+
+                        let selectedSpeaker = selectedLine.Speaker; // Select the speaker
+                        let selectedLineText = selectedLine.LineText; // Select the line
+                        let selectedLineID = selectedLine.LineID; // Select the ID
+
+                        // Retrieve the Speaker and LineText properties for the previous line
+                        let previousSpeaker = previousLine ? previousLine.Speaker : "";
+                        let previousLineText = previousLine ? previousLine.LineText : "";
+
+                        // Retrieve the Speaker and LineText properties for the next line
+                        let nextSpeaker = nextLine ? nextLine.Speaker : "";
+                        let nextLineText = nextLine ? nextLine.LineText : "";
+
+                        // Assign values to the elements
+                        previousSpeakerElement.textContent = previousSpeaker;
+                        previousLineElement.textContent = previousLineText;
+                        currentSpeakerElement.textContent = selectedSpeaker;
+                        currentLineElement.textContent = selectedLineText;
+                        nextSpeakerElement.textContent = nextSpeaker;
+                        nextLineElement.textContent = nextLineText;
+                        currentLineIDElement.textContent = selectedLineID;
+                    } else {
+                        console.log("No line found with the given LineID");
+                    }
+                });
+                resultList.appendChild(li);
+                listCount++;
+                if(listCount > 100){
+                    return;
                 }
-                // Check if a matching line was found
-                if (selectedIndex !== -1) {
-                    let selectedLine = contextLines[selectedIndex];
-                    let previousLine = contextLines[selectedIndex - 1];
-                    let nextLine = contextLines[selectedIndex + 1];
+            }
+            console.log("List length:" + listCount);
 
-                    // Retrieve the Speaker and LineText properties for the selected line
-                    let selectedSpeaker = selectedLine.Speaker;
-                    let selectedLineText = selectedLine.LineText;
-
-                    // Retrieve the Speaker and LineText properties for the previous line
-                    let previousSpeaker = previousLine ? previousLine.Speaker : "";
-                    let previousLineText = previousLine ? previousLine.LineText : "";
-
-                    // Retrieve the Speaker and LineText properties for the next line
-                    let nextSpeaker = nextLine ? nextLine.Speaker : "";
-                    let nextLineText = nextLine ? nextLine.LineText : "";
-
-                    // Assign values to the elements
-                    previousSpeakerElement.textContent = previousSpeaker;
-                    previousLineElement.textContent = previousLineText;
-                    currentSpeakerElement.textContent = selectedSpeaker;
-                    currentLineElement.textContent = selectedLineText;
-                    nextSpeakerElement.textContent = nextSpeaker;
-                    nextLineElement.textContent = nextLineText;
-                } else {
-                    // console.log("No line found with the given LineID");
-                }
+            // Simulate a click event on the first list item
+            let firstListItem = resultList.querySelector('.result-item');
+            if (firstListItem) {
+                firstListItem.click();
             }
         }
-    });
-
+    }
+    
     // Search
     document.getElementById('searchButton').addEventListener('click', function () {
         // Retrieve the search text and selected character from the form
@@ -342,23 +276,21 @@ document.addEventListener('DOMContentLoaded', function () {
         let result = search.searchScript(searchText, processedLines, selectedCharacter);
         // Handle if the result is "Invalid" (not using unique words)
         if (result === 'Invalid') {
-            // Perform the necessary actions to display the result on the page (e.g., show a message)
-            showInvalidResult(); // TODO: Impliment this function
+            showInvalidResult();
             return;
         }
 
         // If there is a valid result
         if (result !== '' && selectedCharacter !== null) {
-            //const lines = new ScriptCollection();
-            //TODO: result is valid here as of 10/27/2023. Need to create SortByRelevance method
-            let lines = search.getMatchingLines(result, scriptLines); // TODO: create method
-            // Start to retreive the context lines as another variable
-            //let resultsWithContextLines = search.AddContextLines(lines); // Create result with all context indexes
-            //contextLines = search.getMatchingLines(resultsWithContextLines, lines);
-            console.log(lines);
-            return
+            let lines = search.getMatchingLines(result, scriptLines); // return the matching lines
+            let resultsWithContextLines = search.addContextLines(lines); // Create result with all context indexes
+            let contextLines = search.getMatchingLines(resultsWithContextLines, lines);
+            console.log(selectedCharacter);
+            // console.log(lines);         
+            assignSearchResults(lines);
+            return lines;
         } else {
-            console.log("Bad results was not handled correctly.");
+            console.log("Bad result. Something was not handled correctly.");
             return
             }
     });   
