@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- Selectors
     let searchInput = document.getElementById('searchInput');
     let dropdown = document.getElementById('dropdown');
+
     let resultList = document.querySelector('.result-list'); // List of results
 
     let sidebarTitle = document.getElementById('selected-title');
@@ -26,50 +27,49 @@ document.addEventListener('DOMContentLoaded', function () {
     let lowerButtonUp = document.getElementById('lower-button-up');
     let lowerButtonDown = document.getElementById('lower-button-down');
 
-    // Update the variable that holds the dropdown value when changed
-    let moreOptions = "More Options...";
-    let charactersLoaded = 50; // Number of characters initially loaded
-
-    // Function to populate the dropdown with character options
-    function populateCharacterOptions() {
-        dropdown.innerHTML = ''; // Clear existing options
-
-        // Add the initial characters to the dropdown
-        for (let i = 0; i < charactersLoaded && i < characterNames.length; i++) { //characterNames is in characterNames.js
-            let character = characterNames[i];
-            let option = document.createElement('option');
-            option.value = character;
-            option.textContent = character;
-            dropdown.appendChild(option);
-        }
-    }
-
     populateCharacterOptions();
 
-    // Event listener for dropdown change
-    dropdown.addEventListener('change', function () {
-        let selectedOption = dropdown.value;
-        if (selectedOption === moreOptions) {
-            charactersLoaded = characterList.length;    // Load all remaining characters
-            populateCharacterOptions();
-        } else {
-            // Handle selection of other character options
-            // ...existing code...
-        }
-    });
 
-    // Up and Down arrows for the script context scrolling
-
-    //Up arrow button for context lines
+    // Up arrow button for script linesin context
     lowerButtonUp.addEventListener('click', function () {
         assignContextResults("up"); 
     });
-
-    // Down arrow button for context lines
+    // Down arrow button for script lines in context
     lowerButtonDown.addEventListener('click', function () {      
         assignContextResults("down");    
     });
-   
+    // Search
+    document.getElementById('searchButton').addEventListener('click', function () {
+
+        
+        // Retrieve the search text and selected character from the form
+        let searchText = searchInput.value;
+        let selectedCharacter = dropdown.value;
+
+        // Create an instance of the Search class
+        let search = new Search();
+
+        // return the results of the search as an ordered list of indexes
+        let result = search.searchScript(searchText, processedLines, selectedCharacter);
+
+        // Handle if the result is "Invalid" (not using unique words)
+        if (result === 'Invalid') {
+            showInvalidResult();
+            return;
+        }
+
+        // If there is a valid result
+        if (result !== '' && selectedCharacter !== null) {
+            let lines = search.getMatchingLines(result, scriptLines); // return the matching lines
+            console.log(selectedCharacter);     
+            assignSearchResults(lines);
+            return lines;
+        } else {
+            console.log("Bad result. Something was not handled correctly.");
+            return
+            }
+    });
+    // function to assign script lines to the bottom half of the screen
     function assignContextResults(button) {
         let currentLineID = parseInt(sidebarLineID.textContent);
             if (currentLineID >= 1) {
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
     }
-
+    // function to assign script lines the to results list
     function assignSearchResults(lines){       
         if (lines === null) { // Do something with no results
             let paragraph = document.createElement('p');
@@ -187,10 +187,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 resultList.appendChild(li);
                 listCount++;
                 if(listCount === lines.length || listCount > 100){
+                    // Simulate a click event on the first list item
+                    let firstListItem = resultList.querySelector('.result-item');
+                    if (firstListItem) {
+                        firstListItem.click();
+                    }
                     return;
-                }
+                    }
             }
-            console.log("List length:" + listCount);
 
             // Simulate a click event on the first list item
             let firstListItem = resultList.querySelector('.result-item');
@@ -199,37 +203,18 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
+        // Function to populate the dropdown with character options
+        function populateCharacterOptions() {
+            dropdown.innerHTML = ''; // Clear existing options
     
-    // Search
-    document.getElementById('searchButton').addEventListener('click', function () {
-        // Retrieve the search text and selected character from the form
-        let searchText = searchInput.value;
-        let selectedCharacter = dropdown.selectedOption;
-
-        // Create an instance of the Search class
-        let search = new Search();
-
-        // return the results of the search as an ordered list of indexes
-        let result = search.searchScript(searchText, processedLines, selectedCharacter);
-        // Handle if the result is "Invalid" (not using unique words)
-        if (result === 'Invalid') {
-            showInvalidResult();
-            return;
-        }
-
-        // If there is a valid result
-        if (result !== '' && selectedCharacter !== null) {
-            let lines = search.getMatchingLines(result, scriptLines); // return the matching lines
-            // let resultsWithContextLines = search.addContextLines(lines); // Create result with all context indexes
-            //let contextLines = search.getMatchingLines(resultsWithContextLines, lines);
-            console.log(selectedCharacter);
-            // console.log(lines);         
-            assignSearchResults(lines);
-            return lines;
-        } else {
-            console.log("Bad result. Something was not handled correctly.");
-            return
+            // Add the initial characters to the dropdown
+            for (let i = 0; i < characterNames.length; i++) { // characterNames.js
+                let character = characterNames[i];
+                let option = document.createElement('option');
+                option.value = character;
+                option.textContent = character;
+                dropdown.appendChild(option);
             }
-    });
+        }
 });
 

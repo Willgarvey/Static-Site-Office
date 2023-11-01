@@ -32,7 +32,6 @@ class Search {
         let matchCount = 0;
         let matchIndex = line.id-1;
         s.matchList = [];
-        // console.log("line.line_text = " + line.line_text);
         let lineList = Search.stringToList(line.line_text);
   
         for (let word of s.wordsList) {

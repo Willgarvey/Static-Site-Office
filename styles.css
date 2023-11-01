@@ -268,3 +268,7 @@ footer {
     .site-logo-link:focus {
         outline: none;
     }
+
+#selected-id {
+    font-size: 0px;
+}
