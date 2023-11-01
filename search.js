@@ -91,11 +91,14 @@ class Search {
     getMatchingLines(result, lines){
       let sortedFinalResults = [];
       let indices = result.split(",").map(index => parseInt(index, 10));
-      let totalLines = 100;
-      for(let i=0; i<totalLines; i++){
-        sortedFinalResults[i] = lines[indices[i]];
+      for(let i=0; i<indices.length; i++){
+        if (i<100){
+          sortedFinalResults[i] = lines[indices[i]];
+        }
+        else {
+          return sortedFinalResults;
+        }
       }
-      return sortedFinalResults;
     }
   }
   

@@ -2,7 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    // Selectors
+    // --- Selectors
     let searchInput = document.getElementById('searchInput');
     let dropdown = document.getElementById('dropdown');
     let resultList = document.querySelector('.result-list'); // List of results
@@ -14,10 +14,10 @@ document.addEventListener('DOMContentLoaded', function () {
     let sidebarScene = document.getElementById('selected-scene');
     let sidebarDiskNumber = document.getElementById('selected-disk-number');
     let sidebarDeleted = document.getElementById('selected-deleted');
+    let sidebarLineID = document.getElementById('selected-id');
 
     let previousSpeakerElement = document.getElementById('previous-speaker'); // Context area
     let previousLineElement = document.getElementById('previous-line');
-    let currentLineIDElement = document.getElementById('current-id');
     let currentSpeakerElement = document.getElementById('current-speaker');
     let currentLineElement = document.getElementById('current-line');
     let nextSpeakerElement = document.getElementById('next-speaker');
@@ -25,9 +25,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let lowerButtonUp = document.getElementById('lower-button-up');
     let lowerButtonDown = document.getElementById('lower-button-down');
-
-    //Enable the Search Button
-    searchButton.disabled = false;
 
     // Update the variable that holds the dropdown value when changed
     let moreOptions = "More Options...";
@@ -62,115 +59,65 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Up and Down arrows for the script context scrolling
-    let storedResults = null;
 
     //Up arrow button for context lines
     lowerButtonUp.addEventListener('click', function () {
-        let currentLineID = document.getElementById('current-id').innerHTML;
-        if (currentLineID != "") {
-            // Check if there are stored results and the current line ID exists in the results
-            if (storedResults && storedResults.some(line => line.lineID == currentLineID)) {
-                assignContextResults(storedResults, "up");
-                //console.log("Cached JSON Used")
-            } else {
-                results = sendDataToServer(parseInt(sidebarSeason.textContent), +
-                    parseInt(sidebarEpisode.textContent), parseInt(sidebarScene.textContent), "up");
-                    //console.log("New JSON Used")
-            }
-            return results;
-        }
+        assignContextResults("up"); 
     });
 
     // Down arrow button for context lines
     lowerButtonDown.addEventListener('click', function () {      
-        let currentLineID = document.getElementById('current-id').innerHTML;
-        // console.log("Current Line ID" + currentLineID);
-        if (currentLineID != "") {
-            // Check if there are stored results and the current line ID exists in the results
-            if (storedResults && storedResults.some(line => line.lineID == currentLineID)) {
-                assignContextResults(storedResults, "down");
-                //console.log("Cached JSON Used")
-            } else {
-                results = sendDataToServer(parseInt(sidebarSeason.textContent), +
-                    parseInt(sidebarEpisode.textContent), parseInt(sidebarScene.textContent), "down");
-                //console.log("New JSON Used")
-            }
-            return results;
-        }      
+        assignContextResults("down");    
     });
    
-    function assignContextResults(results, button) {
-        let previousSpeakerElement = document.getElementById('previous-speaker');
-        let previousLineElement = document.getElementById('previous-line');
-        let currentSpeakerElement = document.getElementById('current-speaker');
-        let currentLineElement = document.getElementById('current-line');
-        let nextSpeakerElement = document.getElementById('next-speaker');
-        let nextLineElement = document.getElementById('next-line');
-
-        let currentLineID = document.getElementById('current-id').innerHTML;
-        // console.log("Line ID Captured: " + currentLineID);
-
-        // Check if any line ID matches the current line ID
-        let matchingLine = results.find(function (line) {
-            return line.lineID == currentLineID;
-        });
-
-        if (matchingLine) {
-            // Find the index of the matching line
-            let matchingIndex = results.indexOf(matchingLine);
-
-            // Check if there are previous and next lines available
-            if (matchingIndex >= 1) {
+    function assignContextResults(button) {
+        let currentLineID = parseInt(sidebarLineID.textContent);
+            if (currentLineID >= 1) {
                 if (button === "up")
                 {
-                    currentSpeakerElement.innerHTML = results[matchingIndex - 1].speaker;
-                    currentLineElement.innerHTML = results[matchingIndex - 1].lineText;
+                    currentSpeakerElement.innerHTML = scriptLines[currentLineID - 1].Speaker;
+                    currentLineElement.innerHTML = scriptLines[currentLineID - 1].LineText;
 
-                    nextSpeakerElement.innerHTML = results[matchingIndex].speaker;
-                    nextLineElement.innerHTML = results[matchingIndex].lineText;
+                    nextSpeakerElement.innerHTML = scriptLines[currentLineID].Speaker;
+                    nextLineElement.innerHTML = scriptLines[currentLineID].LineText;
 
                     try {
-                        previousSpeakerElement.innerHTML = results[matchingIndex - 2].speaker;
-                        previousLineElement.innerHTML = results[matchingIndex - 2].lineText;
+                        previousSpeakerElement.innerHTML = scriptLines[currentLineID - 2].Speaker;
+                        previousLineElement.innerHTML = scriptLines[currentLineID - 2].LineText;
                     }
 
                     catch {
                         previousSpeakerElement.innerHTML = "";
                         previousLineElement.innerHTML = "<b>Beginning of Scene<//b>";
-                        currentLineID = parseInt(currentLineID) + 1;
+                        sidebarLineID.textContent = currentLineID + 1;
                     }
 
-                    currentLineID = parseInt(currentLineID) - 1;
+                    sidebarLineID.textContent = currentLineID - 1;
                 }
 
                 else if (button === "down")
                 {
-                    currentSpeakerElement.innerHTML = results[matchingIndex + 1].speaker;
-                    currentLineElement.innerHTML = results[matchingIndex + 1].lineText;
+                    currentSpeakerElement.innerHTML = scriptLines[currentLineID + 1].Speaker;
+                    currentLineElement.innerHTML = scriptLines[currentLineID + 1].LineText;
 
                     try {
-                        nextSpeakerElement.innerHTML = results[matchingIndex + 2].speaker;
-                        nextLineElement.innerHTML = results[matchingIndex + 2].lineText;
+                        nextSpeakerElement.innerHTML = scriptLines[currentLineID + 2].Speaker;
+                        nextLineElement.innerHTML = scriptLines[currentLineID + 2].LineText;
                     }
 
                     catch {
                         nextSpeakerElement.innerHTML = "";
                         nextLineElement.innerHTML = "<b>End of Scene<//b>";
-                        currentLineID = parseInt(currentLineID) - 1;
+                        sidebarLineID.textContent = currentLineID - 1;
                     }
 
 
-                    previousSpeakerElement.innerHTML = results[matchingIndex].speaker;
-                    previousLineElement.innerHTML = results[matchingIndex].lineText;
+                    previousSpeakerElement.innerHTML = scriptLines[currentLineID].Speaker;
+                    previousLineElement.innerHTML = scriptLines[currentLineID].LineText;
 
-                    currentLineID = parseInt(currentLineID) + 1;
+                    sidebarLineID.textContent = currentLineID + 1;
                 }
-                currentLineIDElement.textContent = currentLineID; // Update the currentLineIDElement with the new value
             }
-        } else {
-            console.log("No matching line found.");
-        }
-        return results;
     }
 
     function assignSearchResults(lines){
@@ -206,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     this.classList.add('selected');
                     let selectedItem = lines[i];
-                    let selectedIndex = i;
+
                     
                     sidebarTitle.textContent = selectedItem.Title; // Populate the sidebar with data of selected list item
                     sidebarSeason.textContent = selectedItem.Season;
@@ -215,41 +162,35 @@ document.addEventListener('DOMContentLoaded', function () {
                     sidebarCharacter.textContent = selectedItem.Speaker;
                     sidebarDiskNumber.textContent = selectedItem.Dvd;
                     sidebarDeleted.textContent = selectedItem.IsDeleted;
-
-                    //selectedItem.LineID
+                    sidebarLineID.textContent = selectedItem.LineID;
                     
-                    if (selectedIndex !== -1) {  // Check if a matching line was found
-                        let selectedLine = scriptLines[selectedItem.LineID];
-                        let previousLine = scriptLines[selectedItem.LineID - 1];
-                        let nextLine = scriptLines[selectedItem.LineID + 1];
+                    let selectedLine = scriptLines[lines[0].LineID];
+                    let previousLine = scriptLines[lines[0].LineID - 1];
+                    let nextLine = scriptLines[lines[0].LineID - -2];
 
-                        let selectedSpeaker = selectedLine.Speaker; // Select the speaker
-                        let selectedLineText = selectedLine.LineText; // Select the line
-                        let selectedLineID = selectedLine.LineID; // Select the ID
+                    let selectedSpeaker = selectedLine.Speaker; // Select the speaker
+                    let selectedLineText = selectedLine.LineText; // Select the line
 
-                        // Retrieve the Speaker and LineText properties for the previous line
-                        let previousSpeaker = previousLine ? previousLine.Speaker : "";
-                        let previousLineText = previousLine ? previousLine.LineText : "";
+                    // Retrieve the Speaker and LineText properties for the previous line
+                    let previousSpeaker = previousLine ? previousLine.Speaker : "";
+                    let previousLineText = previousLine ? previousLine.LineText : "";
 
-                        // Retrieve the Speaker and LineText properties for the next line
-                        let nextSpeaker = nextLine ? nextLine.Speaker : "";
-                        let nextLineText = nextLine ? nextLine.LineText : "";
+                    // Retrieve the Speaker and LineText properties for the next line
+                    let nextSpeaker = nextLine ? nextLine.Speaker : "";
+                    let nextLineText = nextLine ? nextLine.LineText : "";
 
-                        // Assign values to the elements
-                        previousSpeakerElement.textContent = previousSpeaker;
-                        previousLineElement.textContent = previousLineText;
-                        currentSpeakerElement.textContent = selectedSpeaker;
-                        currentLineElement.textContent = selectedLineText;
-                        nextSpeakerElement.textContent = nextSpeaker;
-                        nextLineElement.textContent = nextLineText;
-                        currentLineIDElement.textContent = selectedLineID;
-                    } else {
-                        console.log("No line found with the given LineID");
-                    }
+                    // Assign values to the elements
+                    previousSpeakerElement.textContent = previousSpeaker;
+                    previousLineElement.textContent = previousLineText;
+                    currentSpeakerElement.textContent = selectedSpeaker;
+                    currentLineElement.textContent = selectedLineText;
+                    nextSpeakerElement.textContent = nextSpeaker;
+                    nextLineElement.textContent = nextLineText;
+                    // currentLineIDElement.textContent = selectedLineID;
                 });
                 resultList.appendChild(li);
                 listCount++;
-                if(listCount > 100){
+                if(listCount === lines.length || listCount > 100){
                     return;
                 }
             }
@@ -283,8 +224,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // If there is a valid result
         if (result !== '' && selectedCharacter !== null) {
             let lines = search.getMatchingLines(result, scriptLines); // return the matching lines
-            let resultsWithContextLines = search.addContextLines(lines); // Create result with all context indexes
-            let contextLines = search.getMatchingLines(resultsWithContextLines, lines);
+            // let resultsWithContextLines = search.addContextLines(lines); // Create result with all context indexes
+            //let contextLines = search.getMatchingLines(resultsWithContextLines, lines);
             console.log(selectedCharacter);
             // console.log(lines);         
             assignSearchResults(lines);
