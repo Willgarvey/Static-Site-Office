@@ -134,17 +134,40 @@ footer p {
     margin: 0;
 }
 
+/* Update the scroll bar styling for both mobile and desktop */
 .result-list-container {
     flex: 1;
     min-height: 9em;
     max-width: 65vw;
     overflow-y: scroll;
     scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0.1);
+    scrollbar-color: #333 #111; /* Dark scroll bar thumb and track */
     padding-right: 10px;
     box-shadow: 2px 4px 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: #111;
+    background-color: #111; /* Slightly lighter background color */
 }
+
+/* Apply the dark theme to the desktop scroll bar */
+@media screen and (min-width: 768px) {
+    /* For desktop screens, you can use custom styling */
+    .result-list-container::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .result-list-container::-webkit-scrollbar-thumb {
+        background-color: #333; /* Dark color for the scrollbar thumb */
+        border-radius: 5px;
+    }
+
+    .result-list-container::-webkit-scrollbar-thumb:hover {
+        background-color: #555; /* Slightly lighter color on hover */
+    }
+
+    .result-list-container::-webkit-scrollbar-track {
+        background: #111; /* Background color for the scrollbar track */
+    }
+}
+
 
 .result-list-wrapper {
     display: flex;
@@ -243,7 +266,7 @@ result-zero:before {
     min-width: 14em;
     padding: 10px;
     background-color: #4285F4;
-    color: #fff;
+    color: #f3f3f3;
     border: none;
     border-radius: 4px;
     font-size: 16px;
