@@ -5,11 +5,7 @@ body {
     background-color: #f2f2f2;
 }
 
-a {
-    text-decoration: none;
-}
-
-a:after {
+a, a:after {
     text-decoration: none;
 }
 
@@ -39,6 +35,10 @@ strong {
     font-weight: bold;
     color: black;
     }
+
+.context-list{
+    list-style-type: none;
+}
 
 .hidden {
     display: none;
@@ -70,11 +70,6 @@ strong {
     font-weight: normal;
     margin-bottom: 10px;
     margin-left: 1em;
-}
-
-.lower-container-wrapper {
-    display: flex;
-    flex-direction: row;
 }
 
 .result-item {
