@@ -37,13 +37,6 @@ document.addEventListener('DOMContentLoaded', function () {
         searchText = searchInput.value;
     })
 
-    lowerButtonUp.addEventListener('click', function () { // Press up arrow icon
-        assignContextResults("up"); 
-    });
-
-    lowerButtonDown.addEventListener('click', function () { // Press down arrow icon
-        assignContextResults("down");    
-    });
     document.getElementById('searchButton').addEventListener('click', function (searchText) { // Press the Search button
 
         
@@ -186,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     sidebarDeleted.textContent = selectedItem.IsDeleted;
                     sidebarLineID.textContent = selectedItem.LineID;
 
-                    let selectedLine = scriptLines.find(obj => obj.LineID === parseInt(sidebarLineID.textContent));
+                    let selectedLine = scriptLines.find(obj => obj.LineID === parseInt(sidebarLineID.textContent)); //TODO: Use this elsewhere
                     let previousLine = scriptLines.find(obj => obj.LineID === parseInt(sidebarLineID.textContent) - 1);
                     let nextLine = scriptLines.find(obj => obj.LineID === parseInt(sidebarLineID.textContent) + 1);
 
