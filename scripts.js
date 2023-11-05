@@ -194,13 +194,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     let nextSpeaker = nextLine ? nextLine.Speaker : "";
                     let nextLineText = nextLine ? nextLine.LineText : "";
 
-                    // Assign values to the elements
-                    previousSpeakerElement.textContent = previousSpeaker;
-                    previousLineElement.textContent = previousLineText;
-                    currentSpeakerElement.textContent = selectedSpeaker;
-                    currentLineElement.textContent = selectedLineText;
-                    nextSpeakerElement.textContent = nextSpeaker;
-                    nextLineElement.textContent = nextLineText;
+                    // Assign values to the  context elements
                 });
                 resultList.appendChild(li);
                 listCount++;
