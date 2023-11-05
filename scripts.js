@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const wrappedWords = words.map(word => {
           // Remove punctuation from the end of the word
           const cleanWord = word.replace(/[.,;!?]+$/, '')     
-          if (wordsToWrap.indexOf(cleanWord) !== -1 || wordsToWrap.indexOf(cleanWord.toLowerCase())  !== -1 || wordsToWrap.indexOf(cleanWord.toUpperCase()) !== -1) {
+          if (wordsToWrap.indexOf(cleanWord) !== -1 || (wordsToWrap.toLowerCase()).indexOf(cleanWord.toLowerCase())  !== -1 || (wordsToWrap.toUpperCase()).indexOf(cleanWord.toUpperCase()) !== -1) {
             return `<strong>${word}</strong>`;
           }
           return word;
