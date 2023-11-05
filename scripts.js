@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     sidebarScene.textContent = selectedItem.Scene;
                     sidebarCharacter.textContent = selectedItem.Speaker;
                     sidebarDiskNumber.textContent = selectedItem.Disk;
-                    sidebarDeleted.textContent = selectedItem.IsDeleted;
+                    sidebarDeleted.textContent = selectedItem.IsDeleted ? "YES" : "NO";
                     sidebarLineID.textContent = selectedItem.LineID;
 
                     let selectedLine = scriptLines.find(obj => obj.LineID === parseInt(sidebarLineID.textContent)); //TODO: Use this elsewhere
