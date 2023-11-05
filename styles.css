@@ -1,3 +1,37 @@
+@media screen and (max-width: 500px) {
+    .container {
+        height: 100vh; /* Stretch the container down the entire screen */
+    }
+
+    .search-input,
+    .search-dropdown,
+    .search-button {
+        font-size: 24px; /* Make dropdown, search input, and button bigger */
+    }
+
+    .result-list-container {
+        min-height: 60vh; /* Make the result list taller */
+    }
+}
+
+@media screen and (max-width: 500px) and (orientation: portrait) {
+    .container {
+        height: 200vh; /* Double the height of the container */
+    }
+
+    .inner-container {
+        height: 200vh; /* Double the height of the inner-container */
+    }
+
+    .lower-container {
+        height: 200vh; /* Double the height of the lower-container */
+    }
+
+    body {
+        height: 100vh;
+    }
+}
+
 body {
     display: flex;
     flex-direction: column;
@@ -182,18 +216,3 @@ strong {
     font-size: 0px;
 }
 
-@media screen and (max-width: 500px) {
-    .container {
-        height: 100vh; /* Stretch the container down the entire screen */
-    }
-
-    .search-input,
-    .search-dropdown,
-    .search-button {
-        font-size: 24px; /* Make dropdown, search input, and button bigger */
-    }
-
-    .result-list-container {
-        min-height: 60vh; /* Make the result list taller */
-    }
-}
