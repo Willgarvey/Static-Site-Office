@@ -15,7 +15,7 @@ class Search {
     searchScript(textInput, processedLines, selectedCharacter) {
       let s = new Search();
       let dataList = []; 
-      s.input = textInput;
+      s.input = textInput.toLowerCase();
       s.wordsList = Search.splitAndCleanWords(s.input);
         
       if (!s.wordsList.length) {

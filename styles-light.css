@@ -42,6 +42,11 @@ footer {
         padding-top: 7px;
     }
 
+strong {
+    font-weight: bold;
+    color: black;
+    }
+
 .hidden {
     display: none;
 }

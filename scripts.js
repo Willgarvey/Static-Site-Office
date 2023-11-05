@@ -26,7 +26,16 @@ document.addEventListener('DOMContentLoaded', function () {
     let lowerButtonUp = document.getElementById('lower-button-up'); // Buttons to browse context area
     let lowerButtonDown = document.getElementById('lower-button-down');
 
+    let searchText = searchInput.value;
     populateCharacterOptions();
+
+    searchInput.addEventListener('input', function () {
+        searchText = searchInput.value;
+    })
+
+    searchInput.addEventListener('blur', function () {
+        searchText = searchInput.value;
+    })
 
     lowerButtonUp.addEventListener('click', function () { // Press up arrow icon
         assignContextResults("up"); 
@@ -35,11 +44,11 @@ document.addEventListener('DOMContentLoaded', function () {
     lowerButtonDown.addEventListener('click', function () { // Press down arrow icon
         assignContextResults("down");    
     });
-    document.getElementById('searchButton').addEventListener('click', function () { // Press the Search button
+    document.getElementById('searchButton').addEventListener('click', function (searchText) { // Press the Search button
 
         
         // Retrieve the search text and selected character from the form
-        let searchText = searchInput.value;
+        searchText = searchInput.value;
         let selectedCharacter = dropdown.value;
 
         // Create an instance of the Search class
@@ -56,8 +65,10 @@ document.addEventListener('DOMContentLoaded', function () {
             assignSearchResults(lines);
             return lines;
         } else {
-            console.log("Bad result. Something was not handled correctly.");
-            return
+            let lines = '';
+            assignSearchResults(lines);
+            // console.log("Bad result. Something was not handled correctly.");
+            return lines;
             }
     });
     // function to assign script lines to the bottom half of the screen
@@ -110,9 +121,30 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
     }
+    // function to make matching wordsin results show as bold
+    function addStrongTags(sentence, wordsToWrap) {
+        const words = sentence.split(' ');
+        const wrappedWords = words.map(word => {
+          // Remove punctuation from the end of the word
+          const cleanWord = word.replace(/[.,;!?]+$/, '')     
+          if (wordsToWrap.indexOf(cleanWord) !== -1 || wordsToWrap.indexOf(cleanWord.toLowerCase())  !== -1 || wordsToWrap.indexOf(cleanWord.toUpperCase()) !== -1) {
+            return `<strong>${word}</strong>`;
+          }
+          return word;
+        });
+        return wrappedWords.join(' ');
+      }
+      
+      // Example usage:
+      const sentence = "The quick brown fox jumped over the lazy dog. Quick, brown, and fox are words to wrap. That's the word.";
+      const wordsToWrap = ["quick", "fox", "That's"];
+      const result = addStrongTags(sentence, wordsToWrap);
+      
+      console.log(result);
+      
     // function to assign script lines the to results list
     function assignSearchResults(lines){       
-        if (lines === null || lines === 'Invalid' || lines.length === 0 ) { //No results
+        if (lines === null || lines === 'Invalid' || lines.length == 0) { //No results
             resultList.innerHTML = '';
             let paragraph = document.createElement('p');
             let bold = document.createElement('b');
@@ -137,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 let line = lines[i];
                 let className = i === 0 ? "result-item selected" : "result-item";
                 let dataIndex = i;
-                let lineText = line.LineText;
+                let lineText = addStrongTags(line.LineText, searchInput.value);
                 let speaker = line.Speaker;
                 let li = document.createElement('li');
                 li.className = className;
