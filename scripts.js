@@ -79,14 +79,6 @@ document.addEventListener('DOMContentLoaded', function () {
             paragraph.className = "result-zero";
             paragraph.appendChild(bold);
             resultList.appendChild(paragraph);
-            
-            // Clear out context menu
-            previousLineElement.textContent = '';
-            previousSpeakerElement.textContent = '';
-            currentLineElement.textContent = '';
-            currentSpeakerElement.textContent = '';
-            nextLineElement.textContent = '';
-            nextSpeakerElement.textContent = '';
         }
 
         else { // write script lines to the list           

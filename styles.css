@@ -7,13 +7,8 @@ body {
 a, a:after {
     text-decoration: none;
 }
-.bottom-container {
-    min-height: 13vh;
-    max-height: 40vh;
-}
+
 .container {
-    min-width: 400px;
-    min-height: 70vh;
     padding: 10px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -21,7 +16,7 @@ a, a:after {
     flex-direction: column;
 }
 footer {
-    height: 10px; /* Adjust this value to determine the height of the footer */
+    height: 10px;
     align-items: flex-end;
     padding: 10px;
     margin-bottom: 8px;
@@ -45,7 +40,6 @@ strong {
 .lower-container {
     display: flex;
     flex-direction: column;
-    height: 20vh;
     min-height: 13em;
     margin-top: 2em;
     padding: 20px 0px;
@@ -99,7 +93,7 @@ strong {
     flex: 1; 
     min-height: 9em; 
     max-width: 65vw; 
-    overflow-y: scroll; /* Always show vertical scrollbar */
+    overflow-y: scroll;
     scrollbar-width: thin; 
     scrollbar-color: rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0.1); 
     padding-right: 10px; 
@@ -128,7 +122,7 @@ strong {
     }
     .result-zero:before {
         content: "";
-        flex: 1 0 auto; /* Expand to fill remaining space */
+        flex: 1 0 auto;
     }
 .search-bar {
     display: flex;
@@ -142,13 +136,13 @@ strong {
     margin-right: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 16px;
+    font-size: 24px;
 }
 .search-dropdown {
-    min-width: 10vw;
+    min-width: 25vw;
     margin-right: 10px;
     padding: 10px;
-    font-size: 16px;
+    font-size: 24px;
 }
 .search-button {
     min-width: 14em;
@@ -167,8 +161,6 @@ strong {
     flex-basis: unset;
     width: 100%;
     max-width: 26%;
-    min-height: 9em;
-    max-height: 11em;
     background-color: #f9f9f9;
     padding: 20px;
     box-shadow: 2px 4px 2px 4px rgba(0, 0, 0, 0.1);
@@ -188,4 +180,20 @@ strong {
     }
 #selected-id {
     font-size: 0px;
+}
+
+@media screen and (max-width: 500px) {
+    .container {
+        height: 100vh; /* Stretch the container down the entire screen */
+    }
+
+    .search-input,
+    .search-dropdown,
+    .search-button {
+        font-size: 24px; /* Make dropdown, search input, and button bigger */
+    }
+
+    .result-list-container {
+        min-height: 60vh; /* Make the result list taller */
+    }
 }
