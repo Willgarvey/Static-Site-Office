@@ -135,13 +135,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return wrappedWords.join(' ');
       }
       
-      // Example usage:
-      const sentence = "The quick brown fox jumped over the lazy dog. Quick, brown, and fox are words to wrap. That's the word.";
-      const wordsToWrap = ["quick", "fox", "That's"];
-      const result = addStrongTags(sentence, wordsToWrap);
-      
-      console.log(result);
-      
     // function to assign script lines the to results list
     function assignSearchResults(lines){       
         if (lines === null || lines === 'Invalid' || lines.length == 0) { //No results
