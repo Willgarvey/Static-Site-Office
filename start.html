@@ -1,0 +1,75 @@
+<!-- @using WebAppFramework.Models
+
+@model HomeModel
+
+ -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>The Office Script Search</title>
+    <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="search-form">
+      <h1>The Office Script Search</h1>
+      <form id="searchForm" method="post" action="/Home/SubmitForm">
+        <!-- @Html.AntiForgeryToken() -->
+        <label for="searchInput">Enter a phrase:</label>
+        <input type="text" id="searchInput" name="Text" value="pencil" required>
+        <label for="dropdown">Select a name:</label>
+        <select id="dropdown" name="SelectedOption">
+          <option value="All Speakers">All Speakers</option>
+          <option value="Michael">Michael</option>
+          <option value="Dwight">Dwight</option>
+          <option value="Jim">Jim</option>
+          <option value="Pam">Pam</option>
+          <option value="Andy">Andy</option>
+          <option value="Kevin">Kevin</option>
+          <option value="Angela">Angela</option>
+          <option value="Oscar">Oscar</option>
+          <option value="Erin">Erin</option>
+          <option value="Ryan">Ryan</option>
+          <option value="Darryl">Darryl</option>
+          <option value="Phyllis">Phyllis</option>
+          <option value="Kelly">Kelly</option>
+          <option value="Jan">Jan</option>
+          <option value="Toby">Toby</option>
+          <option value="Stanley">Stanley</option>
+          <option value="Meredith">Meredith</option>
+          <option value="Holly">Holly</option>
+          <option value="Nellie">Nellie</option>
+          <option value="Creed">Creed</option>
+          <option value="Gabe">Gabe</option>
+          <option value="Robert">Robert</option>
+          <option value="David">David</option>
+          <option value="Karen">Karen</option>
+          <option value="Clark">Clark</option>
+          <option value="Roy">Roy</option>
+          <option value="Charles">Charles</option>
+          <option value="Pete">Pete</option>
+          <option value="Jo">Jo</option>
+          <option value="Deangelo">Deangelo</option>
+          <option value="David Wallace">David Wallace</option>
+          <option value="Katy">Katy</option>
+          <option value="Carol">Carol</option>
+          <option value="Donna">Donna</option>
+          <option value="DeAngelo">DeAngelo</option>
+          <option value="Todd Packer">Todd Packer</option>
+          <option value="Val">Val</option>
+          <option value="Danny">Danny</option>
+          <option value="Josh">Josh</option>
+          <option value="More Options...">More Options...</option>
+        </select>
+        <button class="button" id="search" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+  <div class="bottom-container"></div>
+  <footer>
+    <p>&copy; Will Garvey Productions 2023</p>
+  </footer>
+  <script src="js/index.js"></script>
+    <script src="js/characterName.js"></script>
+</body>
+</html>
