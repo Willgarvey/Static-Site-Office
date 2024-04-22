@@ -2,8 +2,32 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
+    // Area to process the data that comes over from the start page
+    let parameters = new URLSearchParams(window.location.search);
+
+    let Text = parameters.get("Text"); // Retrieve 'Text' parameter
+    let selectedOption = parameters.get("SelectedOption"); // Retrieve 'SelectedOption' parameter
+
     let searchInput = document.getElementById('searchInput'); // User input
     let dropdown = document.getElementById('dropdown');
+    let searchButton = document.getElementById('searchButton'); // search button to trigger funtionc
+
+    populateCharacterOptions();
+
+    // Populate the input and dropdown with the retrieved data
+    if (Text) { // error handling
+        searchInput.value = Text;
+    }
+
+    if (selectedOption) { // error handling
+        // Find the correct option and set the dropdown's selected index
+        let option = [...dropdown.options].find(
+            (o) => o.textContent === selectedOption
+        );
+        if (option) {
+            dropdown.selectedIndex = option.index;
+        }
+    }
 
     let resultList = document.querySelector('.result-list'); // List of results
 
@@ -20,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Retrieve the search text and selected character from the form
     let searchText = searchInput.value;
-    populateCharacterOptions();
+
 
     searchInput.addEventListener('input', function () {
         searchText = searchInput.value;
@@ -30,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
         searchText = searchInput.value;
     })
 
-    document.getElementById('searchButton').addEventListener('click', function (searchText) { // Press the Search button
+    searchButton.addEventListener('click', function (searchText) { // Press the Search button
 
         
         // Retrieve the search text and selected character from the form
@@ -57,6 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return lines;
             }
     });
+    
     // function to make matching wordsin results show as bold
     function addStrongTags(sentence, wordsToWrap) {
         const words = sentence.split(' ');
@@ -161,5 +186,10 @@ document.addEventListener('DOMContentLoaded', function () {
             option.textContent = character;
             dropdown.appendChild(option);
         }
+    }
+
+    // Simulate the click event on the search button
+    if (Text || selectedOption) {
+        searchButton.click(); // Simulate a click on the search button
     }
 });
